@@ -17,6 +17,11 @@
 
 <ion-content class="ion-padding">
 
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Nova Tarefa</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
 <ion-item>
 <ion-input
 placeholder="Digite uma tarefa"
@@ -24,14 +29,24 @@ v-model="novaTarefa">
 </ion-input>
 </ion-item>
 
+
 <ion-button expand="block" @click="adicionarTarefa">
 Adicionar
+
+<ion-icon slot="start" :icon="addOutline"></ion-icon>
 </ion-button>
+</ion-card-content>
+</ion-card>
 
 <p v-if="tarefas.length === 0">
 Nenhuma tarefa cadastrada. Adicione a primeira!
 </p>
 
+<ion-card>
+    <ion-card-header>
+        <ion-card-title>Minhas Tarefas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
 <ion-list>
 
 <ion-item v-for="(t, i) in tarefas" :key="i">
@@ -42,11 +57,17 @@ Nenhuma tarefa cadastrada. Adicione a primeira!
 
 <ion-button color="danger" @click="removerTarefa(i)">
 Remover
+
+<ion-icon slot="start" :icon="trashOutline"></ion-icon>
+
+
 </ion-button>
 
 </ion-item>
 
 </ion-list>
+</ion-card-content>
+</ion-card>
 
 </ion-content>
 
@@ -55,8 +76,6 @@ Remover
 </template>
 
 <script setup lang="ts">
-
-import { ref } from 'vue'
 
 import {
 IonPage,
@@ -70,9 +89,18 @@ IonButton,
 IonList,
 IonLabel,
 IonBackButton,
-IonButtons
+IonButtons,
+IonCard,
+IonCardHeader,
+IonCardTitle,
+IonCardContent
 } from '@ionic/vue'
+import { IonIcon } from '@ionic/vue'
+import {
+addOutline, trashOutline,
+} from 'ionicons/icons'
 
+import { ref } from 'vue'
 const novaTarefa = ref('')
 const tarefas = ref<string[]>([])
 
