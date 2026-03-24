@@ -76,51 +76,93 @@ Remover
 </template>
 
 <script setup lang="ts">
-
-import {
-IonPage,
-IonHeader,
-IonToolbar,
-IonTitle,
-IonContent,
-IonItem,
-IonInput,
-IonButton,
-IonList,
-IonLabel,
-IonBackButton,
-IonButtons,
-IonCard,
-IonCardHeader,
-IonCardTitle,
-IonCardContent
-} from '@ionic/vue'
-import { IonIcon } from '@ionic/vue'
-import {
-addOutline, trashOutline,
-} from 'ionicons/icons'
-
 import { ref } from 'vue'
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonItem,
+  IonInput,
+  IonButton,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel
+} from '@ionic/vue'
+
+import { useTarefas } from '../composables/useTarefas'
+import CardTarefa from '../components/CardTarefa.vue'
+
+const {
+  busca,
+  filtroAtivo,
+  filtradas,
+  totalPendentes,
+  adicionar,
+  remover,
+  concluir
+} = useTarefas()
+
 const novaTarefa = ref('')
-const tarefas = ref<string[]>([])
 
-function adicionarTarefa() {
-
-if (novaTarefa.value.trim() === '') {
-return
+function adicionarNova() {
+  adicionar(novaTarefa.value)
+  novaTarefa.value = ''
 }
-
-tarefas.value.push(novaTarefa.value)
-
-novaTarefa.value = ''
-
-}
-
-function removerTarefa(index: number) {
-tarefas.value.splice(index, 1)
-}
-
 </script>
+
+<template>
+  <IonPage>
+    <IonHeader>
+      <IonToolbar>
+        <IonTitle>Minhas Tarefas</IonTitle>
+      </IonToolbar>
+    </IonHeader>
+
+    <IonContent class="ion-padding">
+      <IonItem>
+        <IonInput
+          v-model="novaTarefa"
+          placeholder="Digite uma nova tarefa"
+        />
+        <IonButton @click="adicionarNova">Adicionar</IonButton>
+      </IonItem>
+
+      <IonItem>
+        <IonInput
+          v-model="busca"
+          placeholder="Buscar tarefa"
+        />
+      </IonItem>
+
+      <IonSegment v-model="filtroAtivo">
+        <IonSegmentButton value="todas">
+          <IonLabel>Todas</IonLabel>
+        </IonSegmentButton>
+
+        <IonSegmentButton value="pendentes">
+          <IonLabel>Pendentes</IonLabel>
+        </IonSegmentButton>
+
+        <IonSegmentButton value="feitas">
+          <IonLabel>Feitas</IonLabel>
+        </IonSegmentButton>
+      </IonSegment>
+
+      <p>Pendentes: {{ totalPendentes }}</p>
+
+      <CardTarefa
+        v-for="tarefa in filtradas"
+        :key="tarefa.id"
+        :tarefa="tarefa"
+        @remover="remover"
+        @concluir="concluir"
+      />
+    </IonContent>
+  </IonPage>
+</template>
+
 
 <style scoped>
 
